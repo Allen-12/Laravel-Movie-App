@@ -18,4 +18,4 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::view("/","movies.index");
-Route::view("/movie/show","movies.index");
+Route::view("/movie/show","movies.show");
