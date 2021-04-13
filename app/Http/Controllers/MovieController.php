@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -11,25 +14,34 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Application|Factory|View
      */
     public function index()
     {
+        // Gets popular movies from API
         $popularMovies = Http::withToken(config('services.tmdb.token'))
                         ->get("https://api.themoviedb.org/3/movie/popular")
                         ->json()['results'];
 
+        // Gets popular movies from API
+        $nowPlayingMovies = Http::withToken(config('services.tmdb.token'))
+            ->get("https://api.themoviedb.org/3/movie/now_playing")
+            ->json()['results'];
+
+        // Gets the genres of the movies from the API
         $genresArray = Http::withToken(config('services.tmdb.token'))
             ->get("https://api.themoviedb.org/3/genre/movie/list")
             ->json()['genres'];
+
+        // Maps the genre ID from the API to the genre name
         $genres = collect($genresArray)->mapWithKeys(function ($genre)
         {
            return [
                $genre['id'] => $genre['name']
            ];
         });
-        dump($popularMovies);
-        return view("movies.index",compact("popularMovies","genres"));
+
+        return view("movies.index",compact("popularMovies","nowPlayingMovies","genres"));
     }
 
     /**
@@ -56,18 +68,22 @@ class MovieController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Movie  $movie
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View
      */
-    public function show(Movie $movie)
+    public function show($id)
     {
-        //
+        $movie = Http::withToken(config('services.tmdb.token'))
+            ->get("https://api.themoviedb.org/3/movie/".$id."?append_to_response=credits,videos,images")
+            ->json();
+
+//        dump($movie);
+        return view("movies.show",compact("movie"));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Movie  $movie
+     * @param Movie $movie
      * @return \Illuminate\Http\Response
      */
     public function edit(Movie $movie)
@@ -79,7 +95,7 @@ class MovieController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Movie  $movie
+     * @param Movie $movie
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Movie $movie)
@@ -90,7 +106,7 @@ class MovieController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Movie  $movie
+     * @param Movie $movie
      * @return \Illuminate\Http\Response
      */
     public function destroy(Movie $movie)
