@@ -25,7 +25,7 @@
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 @forelse($nowPlayingMovies as $movie)
-                    <x-movie-card :movie="$movie" :genres="$genres"/>
+                    <x-movie-card :movie="$movie"/>
                 @empty
                     <div class="mt-8">
                         <p>Now Playing movies are not available</p>
