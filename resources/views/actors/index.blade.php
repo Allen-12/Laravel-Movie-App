@@ -1,0 +1,48 @@
+@extends('layouts.main')
+
+@section('content')
+    <div class="container mx-auto mb-6 px-4 py-16">
+        {{--Popular Actors--}}
+        <div class="popular-movies">
+            <h2 class="uppercase tracking-wider text-yellow-500 text-4xl font-semibold">
+                Popular Actors
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                @forelse($popularActors as $actor)
+                    <div class="actor mt-8">
+                        <a href="{{ route('actors.show', $actor['id']) }}"><img src="{{ $actor['profile_path'] }}" alt="profile image" class="hover:opacity-75 transition ease-in-out duration-150"></a>
+                        <div class="mt-2">
+                            <a href="{{ route('actors.show', $actor['id']) }}" class="text-lg hover:text-gray-300">{{ $actor['name'] }}</a>
+                            <div class="text-sm truncate text-gray-400">{{ $actor['known_for'] }}</div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="actor mt-8">
+                        <p class="text-red-500">No actors available</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
+        <div class="page-load-status my-8">
+            <div class="flex justify-center">
+                <p class="infinite-scroll-request spinner my-8 text-4xl">&nbsp;</p>
+            </div>
+            <p class="infinite-scroll-last">End of content</p>
+            <p class="infinite-scroll-error">Error</p>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+    <script>
+        let elem = document.querySelector('.grid');
+        let infScroll = new InfiniteScroll( elem, {
+            // options
+            path: '/actors/page/@{{#}}',
+            append: '.actor',
+            status: '.page-load-status'
+        });
+    </script>
+@endsection
