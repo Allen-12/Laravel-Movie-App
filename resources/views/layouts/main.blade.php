@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Movie App</title>
 
+    <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon"/>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <livewire:styles />
@@ -27,7 +28,7 @@
                     <a href="{{ route('movies.index') }}" class="hover:text-gray-300">Movies</a>
                 </li>
                 <li class="md:ml-6 mt-3 md:mt-0">
-                    <a href="" class="hover:text-gray-300">TV Shows</a>
+                    <a href="{{ route('tv.index') }}" class="hover:text-gray-300">TV Shows</a>
                 </li>
                 <li class="md:ml-6 mt-3 md:mt-0">
                     <a href="{{ route('actors.index') }}" class="hover:text-gray-300">Actors</a>

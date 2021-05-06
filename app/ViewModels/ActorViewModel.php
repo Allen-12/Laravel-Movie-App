@@ -3,6 +3,7 @@
 namespace App\ViewModels;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Spatie\ViewModels\ViewModel;
 
 class ActorViewModel extends ViewModel
@@ -38,16 +39,29 @@ class ActorViewModel extends ViewModel
         ]);
     }
 
-    public function knownForTitles()
+    public function knownForTitles(): Collection
     {
         $castTitles = collect($this->credits)->get('cast');
 
-        return collect($castTitles)->where('media_type', 'movie')->sortByDesc('popularity')->take(5)->map(function ($movie){
+        return collect($castTitles)->sortByDesc('popularity')->take(5)->map(function ($movie){
+            if (isset($movie['title']))
+            {
+                $title = $movie['title'];
+            }
+            elseif ($title = $movie['name'])
+            {
+                $title = $movie['name'];
+            }
+            else
+            {
+                $title = "Untitled";
+            }
             return collect($movie)->merge([
                'poster_path' =>  $this->actor['profile_path']
                    ? 'https://image.tmdb.org/t/p/w185'. $movie['poster_path']
                    : 'https://ui-avatars.com/api/?size=185&name='.$movie['title'],
-                'title' => $movie['title'] ?? 'Untitled',
+                'title' => $title,
+                'linkToPage' => $movie['media_type'] == 'movie' ? route('movies.show',$movie['id']) : route('tv.show',$movie['id']),
             ]);
         });
     }

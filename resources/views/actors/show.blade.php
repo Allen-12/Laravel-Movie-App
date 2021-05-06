@@ -58,9 +58,9 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
                     @foreach($knownForTitles as $title)
                         <div class="mt-4">
-                            <a href="{{ route('movies.show',$title['id']) }}">
+                            <a href="{{ $title['linkToPage'] }}">
                                 <img src="{{$title['poster_path'] }}" alt="poster" class="hover:opacity-75 transition ease-in-out duration-150">
-                                <a href="" class="text-sm leading-normal block text-gray-400 hover:text-white mt-1">
+                                <a href="{{ $title['linkToPage'] }}" class="text-sm leading-normal block text-gray-400 hover:text-white mt-1">
                                     {{ $title['title'] }}
                                 </a>
                             </a>
