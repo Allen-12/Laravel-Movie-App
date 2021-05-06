@@ -7,7 +7,7 @@
     <title>Movie App</title>
 
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon"/>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet">
 
     <livewire:styles />
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
